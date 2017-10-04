@@ -1,3 +1,0 @@
-I use "Force Atlas" method to layout the graph as well as "Adjusted by Sizes".
-I label those nodes whose degree range are larger than 30.
-I set the node size from large to small and color from light yellow to dark green according to node degree ranking from high to low.
