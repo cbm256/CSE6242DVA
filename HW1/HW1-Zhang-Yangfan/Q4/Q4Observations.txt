@@ -1,0 +1,18 @@
+c(i):
+After using Method "key collision" and Keying Function "ngram-fingerprint" on clustering process, I finally got 909 unique values on the “propertyzoningdesc” column.
+
+c(ii):
+datePart(value.toDate(),"weekday")+', '+value.toDate('yyyy-mm-dd','MMM,dd,yyyy').toString();
+
+c(iii):
+nominal data: propertyzoningdesc
+ordinal data: buildingqualitytypeid
+
+c(iv):
+if(cells["bedroomcnt"].value.toNumber() > 3, true, false);
+
+c(v):
+value.replace("*","")
+
+c(vi):
+URL-fetching feature: The Zillow Dataset includes latitude/longitude pairs for all properties. There are some websites that can translate from latitude/longitude pair to street address. So we can use Google Refine to call such a web service to get the exact address to make our result more beautiful and clear.
