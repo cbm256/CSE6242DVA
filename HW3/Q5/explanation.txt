@@ -1,2 +1,0 @@
-We can find that all evaluation metrics of Neutral Network Regression are worse than those of Linear Regression. 
-This result indicates that the underlying distribution of those features with price value is closer to linear distribution rather than the neural network distribution model.

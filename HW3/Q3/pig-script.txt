@@ -1,7 +1,0 @@
-bigrams = LOAD 's3://cse6242-2017fall-aws-big/*' AS (bigram:chararray, year:int, occurrences:int, books:int);
-bigrams = FILTER bigrams BY occurrences >= 200 AND books >= 10;
-entry = GROUP bigrams BY bigram;
-new_map = FOREACH entry GENERATE $0, SUM(bigrams.occurrences), SUM(bigrams.books);
-result = FOREACH new_map GENERATE $0, (double)$1/$2;
-final = LIMIT (ORDER result BY $1 DESC, $0 ASC) 10;
-STORE final INTO 's3://cse6242-yzhang3067/output-big' USING PigStorage('\t');

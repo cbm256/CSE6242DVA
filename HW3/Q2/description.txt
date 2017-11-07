@@ -1,7 +1,0 @@
-Line 19: Read file in lines and split on Tab key. Then filter(ignore) those edges whose weight < 5.
-Line 20: Create Map1(outedge) for all out edges of nodes with <key, value> pair <node number, -weight>. Then reduce all edges by key through adding weights.
-Line 21: Create Map2(inedge) for all in edges of nodes with <key, value> pair <node number, weight>. Then reduce all edges by key through adding weights.
-Line 22: Join Map1 and Map2 to one whole Map with same key value. Get Map with each line <node number, weight1, weight2>.
-Line 23: Calculate the gross accumulated node weight for each node, which means sum of weight1 and weight2 with same node number(key) on the whole Map.
-Line 24: Do action operations and change the final result format.
-Line 27: Save final result to text file.
