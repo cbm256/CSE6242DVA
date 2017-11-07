@@ -1,0 +1,8 @@
+a.
+1. Delete blank columns because of useless.
+2. Left align text, right align numbers, align titles with data, resize columns to data, put white space to work, remove repetition on the first & second columns and adjust the title to multiply rows to make the table more readable and clean.
+b.
+1. Use single line chart with multiple lines and different colors.
+2. Set line size(thickness) changing according to the measure values.
+3. Set the tick marks on Year axis automatic.
+4. Hide column lines.

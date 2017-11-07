@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Heatmap</title>
+		<script type="text/javascript" src="../lib/d3.v3.min.js"></script>
+		<style type="text/css">
+			body {
+  				font: 10px sans-serif;
+  				margin: 200;
+  				width:1000;
+  				height:1000;
+			}
+			.label {
+			  font-weight: bold;
+			}
+			.tile {
+			  shape-rendering: crispEdges;
+			}
+			.axis path,
+			.axis line {
+			  fill: none;
+			  stroke: #000;
+			  shape-rendering: crispEdges;
+			}
+			div.title{
+				text-align: center;
+				width: 1000px;
+				height: 20px;
+				font-size: 20px;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div id = "title"></div>
+		<div id = "select"></div>
+		<div id = "heatmap"></div>
+		<script type="text/javascript">
+			var season1 = [];
+			var season2 = [];
+			var season3 = [];
+			var season4 = [];
+			var season5 = [];
+			var season6 = [];
+			var margin = {top: 180, right: 240, bottom: 0, left: 100},
+				width = 960-margin.left - margin.right,
+				height = 600-margin.top - margin.bottom;
+
+			d3.csv("heatmap.csv", function(data){
+				
+				data.forEach(function (d){
+					d2 = [
+					{
+						"name":7,//"Baratheon"
+						"episode":+d.episode,
+						"value":+d.Baratheon
+					},
+					{
+						"name":6,//"Greyjoy"
+						"episode":+d.episode,
+						"value":+d.Greyjoy
+					},
+					{
+						"name":5,//"Lannister"
+						"episode":+d.episode,
+						"value":+d.Lannister
+					},
+					{
+						"name":4,//"Martell"
+						"episode":+d.episode,
+						"value":+d.Martell
+					},
+					{
+						"name":3,//"Stark"
+						"episode":+d.episode,
+						"value":+d.Stark
+					},
+					{
+						"name":2,//"Targaryen"
+						"episode":+d.episode,
+						"value":+d.Targaryen
+					},
+					{
+						"name":1,//"Tyrell"
+						"episode":+d.episode,
+						"value":+d.Tyrell
+					}																				
+					];
+
+					data.push(d);
+					if(d.season == "1"){
+						Array.prototype.push.apply(season1,d2);
+					}else if(d.season == "2"){
+						Array.prototype.push.apply(season2,d2);
+					}else if(d.season == "3"){
+						Array.prototype.push.apply(season3,d2);
+					}else if(d.season == "4"){
+						Array.prototype.push.apply(season4,d2);
+					}else if(d.season == "5"){
+						Array.prototype.push.apply(season5,d2);
+					}else{
+						Array.prototype.push.apply(season6,d2);
+					}
+				});
+		    
+		    var title = d3.select("#title")
+		    .style("margin-left", "200px")
+		    .style("font-size", "30px")
+		    .style("font-wight","bold")
+		    .append("text")
+			.attr("width", width/2)
+			.attr("height", height/2)
+			.text("A Visualization of Ice and Fire")
+
+			
+			var select = d3.select("#select")				
+				.append("text")
+				.text("Season")
+				.style("font-size","20px")
+				.style("margin", "20px 0 0 350px");
+			var select_box = d3.select("#select")
+				.append("select")
+				.style("margin","20px 0 20px 10px")
+				.attr("class","selection")
+				.on("change",function(){
+					var selectValue = d3.select('select').property('value');
+					onchange(selectValue);
+				})
+
+			var selectBox = ["1", "2", "3", "4", "5", "6"];		 			
+
+			var options = select_box
+						.selectAll("option")
+						.data(selectBox).enter()
+						.append("option")
+						.text(function (d) { return d; });
+
+			d3.selectAll("input").on("change", onchange);
+		
+	  		onchange("1");		
+			
+			function onchange(selectValue){
+			if(selectValue == "1"){
+				selectdata = season1;
+			}else if(selectValue == "2"){
+				selectdata = season2;
+			}else if(selectValue == "3"){
+				selectdata = season3;
+			}else if(selectValue == "4"){
+				selectdata = season4;
+			}else if(selectValue == "5"){
+				selectdata = season5;
+			}else{
+				selectdata = season6;
+			}
+			d3.select("svg").remove();
+
+			var svg = d3.select("#heatmap").append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var x = d3.scale.linear().range([0,width]);
+			var y = d3.scale.linear().range([height, 0]);
+			var z = d3.scale.quantile().range(['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58']);
+			var xStep = 1;
+			var yStep = 1;
+			
+			x.domain(d3.extent(selectdata, function(d){
+				return d.episode;
+			}));
+			y.domain(d3.extent(selectdata, function(d){
+				return d.name;
+			}));
+			z.domain([0, d3.max(selectdata, function(d){
+				return d.value;
+			})]);
+
+			x.domain([x.domain()[0], +x.domain()[1] + xStep]);
+  			y.domain([y.domain()[0], y.domain()[1] + yStep]);
+			
+			svg.selectAll(".tile")
+			   .data(selectdata)
+			   .enter()
+			   .append("rect")
+			   .attr("class", "tile")
+			   .attr("x", function(d){
+				return x(d.episode);
+			   })
+			   .attr("y", function(d){
+				return y(d.name+4*yStep)+10;
+			   })
+			   .attr("width", x(xStep)-x(0)-5)
+			   .attr("height", y(0)-y(yStep)-5)
+			   .style("fill", function(d){
+				return z(d.value+5);
+			   })
+			
+			z.quantiles().unshift(0)
+			
+			// Add a legend for the color values.
+			var legend = svg.selectAll(".legend")
+			  .data(z.quantiles())
+			  .enter().append("g")
+			  .attr("class", "legend")
+			  .attr("transform", function(d, i) { return "translate(" + (i*40) + "," + (height-80) + ")"; });
+
+			legend.append("rect")
+			  .attr("width", 40)
+			  .attr("height", 7)
+			  .style("fill", z);
+
+			legend.append("text")
+			  .attr("x", 0)
+			  .attr("y", -8)
+			  .attr("dy", ".25em")
+			  .text(function(d){
+			  	return Math.round(d);
+			  });
+			  
+			svg.append("text")
+			  .attr("x", 0)
+			  .attr("y", height-110)
+			  .style("font-weight", "bold")
+			  .text("No of Appearances");
+
+			svg.append("text")
+			  .attr("x", -53)
+			  .attr("y", -165)
+			  .style("font-weight", "bold")
+			  .style("font-size", "15px")
+			  .text("House");
+
+			svg.append("text")
+			  .attr("x", width)
+			  .attr("y", height-160)
+			  .style("font-weight", "bold")
+			  .style("font-size", "15px")
+			  .text("Episode");
+			  			
+			// Add an x-axis with label.
+			svg.selectAll(".text")
+			.data(selectdata)
+			.enter()
+			.append("text")
+			.attr("class","label")
+			.style("font-weight","lighter")
+			   .attr("x", function(d){
+				return x(d.episode)+25;
+			   })
+			   .attr("y", height-160)
+			  .text(function(d){
+			    return d.episode;
+			    });
+
+			// Add a y-axis with label.			  
+			svg.selectAll(".text")
+			.data(selectdata)
+			.enter()
+			.append("text")
+			.attr("class","label")
+			   .attr("x", -7)
+			.style("font-weight","lighter")
+			.attr("text-anchor","end")
+			   .attr("y", function(d){
+				return y(d.name+yStep)-140;
+			   })
+			  .text(function(d){
+			  		var house = ["Tyrell", "Targaryen", "Stark", "Martell", "Lannister","Greyjoy","Baratheon"];
+				   	return house[d.name-1];
+			    });
+			    
+			};
+			
+		   });
+		</script>
+	</body>
+</html>

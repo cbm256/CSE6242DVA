@@ -1,0 +1,7 @@
+A.2:
+Features 2 (plasma glucose) vs. Feature 5 (insulin) is the better feature. 
+Because on the second graph most points are overlapping each other.
+However, on the first graph, although there are some overlaps, most of the negative points are on the smaller parts of plasma glucose while positive the opposite. 
+
+C:
+if data is in a very big range, we may use square root scale and log scale in charts because they can scale data to a smaller range and better reflect the relation among data.

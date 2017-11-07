@@ -1,0 +1,2 @@
+I scale the radius linearly, since it's easy to implement and explicit on reflecting the difference of radius according to their degree.
+And I use 3 as intercept otherwise those nodes with degree one will be too small to show clearly.
